@@ -150,7 +150,7 @@ void generate_wave2(uint8_t i, wave_info_t *info)
 	if(info->type == Sin)
 			adc0832_write((int)(sin_code[i]/3.0*info->ampl));
 	else if(info->type == Rect)
-			adc0832_write(rect_code[i]);
+			adc0832_write((int)(rect_code[i]/3.0*info->ampl));
 
 }
 

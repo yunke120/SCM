@@ -212,7 +212,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if(htim->Instance == TIM3) // 100ms中断一次
 	{
-		
 		for(int i = 0; i < 2; i++)
 		{
 			HAL_ADC_Start(&hadc1);         /* 开启ADC转换 */
