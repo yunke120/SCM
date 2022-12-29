@@ -11,6 +11,8 @@
 *.dbgconf
 *.F_188
 *.workspace
+**/Project Backups/*
+STM32_485/
 
 
 

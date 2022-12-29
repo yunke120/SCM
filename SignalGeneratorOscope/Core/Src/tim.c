@@ -218,12 +218,10 @@ static void show(uint8_t *buf, uint8_t len)
 	OLED_Clear_GRAM(); /* OLED_Clear()函数不能清除使用了Gram的函数 */
 
 	/* 画坐标系 */
-	LCD_DrawLine(63,0, 63,63);
-	LCD_DrawLine(0,32, 127,32);
-	LCD_DrawLine(124,35, 127,32);
-	LCD_DrawLine(124,29, 127,32);
-	LCD_DrawLine(60,60, 63,63);
-	LCD_DrawLine(66,60, 63,63);
+//	LCD_DrawLine(0,0, 0,63);
+//	LCD_DrawLine(0,0, 127,0);
+//	LCD_DrawLine(0,63, 2,60);
+//	LCD_DrawLine(127,0, 124,2);
 	
 	/* 画曲线 */
 	for(i = 0; i < len-1; i++)
@@ -268,6 +266,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			  adc_ampl_sum += ADCBuf[i][1];
 			  adc_signal_sum += ADCBuf[i][2];
 		  }
+		  memset(ADCBuf, 0, sizeof(ADCBuf));
+		  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADCBuf, ChannelNum*RecvLen);
 			  y = (adc_signal_sum/RecvLen) >> 6; // 相当于 raw / 4095 * 63 ,使用位操作计算速度更快
 			  shift(yBuf, DATALEN, y);
 			  show(yBuf, DATALEN);
@@ -280,35 +280,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		  __HAL_TIM_SET_AUTORELOAD(&htim2, counter); /* 重新设置计数值 */
 		  
 		  temp = CalcFreq * (adc_freq_sum / RecvLen);
-		  wave_info.freq = (uint16_t)temp;
+		  wave_info.freq = 20000-200-(uint16_t)temp;
 		  
 		  wave_info.ampl = 3.3*(adc_ampl_sum / RecvLen)/4095.0;
 		  
-		  memset(ADCBuf, 0, sizeof(ADCBuf));
-		  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADCBuf, ChannelNum*RecvLen);
+		  
 	  }	
-		
-//		for(int i = 0; i < 2; i++)
-//		{
-//			HAL_ADC_Start(&hadc2);         /* 开启ADC转换 */
-//			if(HAL_OK == HAL_ADC_PollForConversion(&hadc2, 50)) /* 等待转换完成 */
-//			{
-//				ADCBuf[i] = HAL_ADC_GetValue(&hadc2); /* 获取ADC值 */
-//			}
-//		}
-//		HAL_ADC_Stop(&hadc2); /* 关闭ADC转换 */
-//		printf("%d,%d\r\n", ADCBuf[0],ADCBuf[1]); /* 打印adc值 */
-//		
-//		fcounter = CalcCounter * ADCBuf[1]; /* 计算定时器计数值 */
-//		counter = (uint16_t)fcounter;
-//		__HAL_TIM_SET_AUTORELOAD(&htim2, counter); /* 重新设置计数值 */
-//		
-//		fcounter = CalcFreq * ADCBuf[1];    /* 计算波形频率 */
-//		counter = (uint16_t)fcounter;
-//		wave_info.freq = 20000-100-counter;
-//		
-//		fcounter = 3.0*ADCBuf[0]/3719.0; 	/* 计算波形幅值 */
-//		wave_info.ampl = fcounter;
 	}
 }
 /* USER CODE END 1 */

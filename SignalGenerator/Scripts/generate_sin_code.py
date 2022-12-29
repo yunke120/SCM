@@ -2,7 +2,7 @@
 import math
 import matplotlib.pyplot as plt
 
-widths = 8       # 正弦数据位数
+widths = 12       # 正弦数据位数
 lengths =256     # 采样点数
 code = []        # 输出16进制整形
 
